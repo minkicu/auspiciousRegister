@@ -76,8 +76,7 @@
 export default {
     data() {
         return {
-            dialog: false,
-            errorMsg: 'test',
+
             form: {
                 firstname: '',
                 lastname: '',
@@ -104,8 +103,11 @@ export default {
                 }
             })
             if(!validated){
-                this.errorMsg = errors.map((error) => error+'<br/>').join('')
-                this.dialog = true
+                this.$store.dispatch('setDialog', {
+                    isShow: true,
+                    title: 'Form is error',
+                    message: errorMsg = errors.map((error) => error+'<br/>').join('')
+                })
             }
             console.log(errorMsg)
             return validated
