@@ -7,7 +7,10 @@ export const state = () => ({
     register: {
         firstname: '',
         lastname: '',
-        gender: 1
+        gender: 1,
+        birthdate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        birthtime: '',
+        birthlocation: ''
 
     }
 })

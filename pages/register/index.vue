@@ -76,11 +76,10 @@
 export default {
     data() {
         return {
-
             form: {
-                firstname: '',
-                lastname: '',
-                gender: 1
+                firstname: this.$store.getters.getRegister.firstname,
+                lastname: this.$store.getters.getRegister.lastname,
+                gender: this.$store.getters.getRegister.gender
             }
         }
     },
@@ -99,13 +98,18 @@ export default {
             validatorField.forEach((field) => {
                 if(this.form[field] == ''){
                     validated = false
-                    errors.push(`${field} ไม่สามารถเว้นว่างได้`)
+                    //errors.push(`${field} ไม่สามารถเว้นว่างได้`)
+                    if (field == 'firstname') {
+                        errors.push(`ชื่อ ไม่สามารถเว้นว่างได้`)
+                    } else {
+                        errors.push(`สกุล ไม่สามารถเว้นว่างได้`)
+                    }
                 }
             })
             if(!validated){
                 this.$store.dispatch('setDialog', {
                     isShow: true,
-                    title: 'Form is error',
+                    title: 'ข้อผิดพลาด',
                     message: errorMsg = errors.map((error) => error+'<br/>').join('')
                 })
             }

@@ -33,6 +33,9 @@ export default {
     .text-primay{
       color: #1976d2;
     }
+    .text-main{
+      font-size: 20px;
+    }
     .text-title{
       font-size: 20px;
       font-weight: bold;
