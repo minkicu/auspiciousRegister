@@ -23,15 +23,17 @@
                 </v-col>
                 <v-col cols="12">
                     <v-form>
-                        <v-text-field
+                        <v-text-field class="mb-3"
                             v-model="form.firstname"
                             hint="ไม่ต้องระบุคำนำหน้า"
                             label="ชื่อ"
+                            :rules="[rules.required]"
                         ></v-text-field>
-                        <v-text-field
+                        <v-text-field class="mb-3"
                             v-model="form.lastname"
                             dense
                             label="สกุล"
+                            :rules="[rules.required]"
                         ></v-text-field>
                         <div class="gender-group d-flex mt-3">
                             <p>เพศ</p>
@@ -80,6 +82,9 @@ export default {
                 firstname: this.$store.getters.getRegister.firstname,
                 lastname: this.$store.getters.getRegister.lastname,
                 gender: this.$store.getters.getRegister.gender
+            },
+            rules: {
+                required: value => !!value || 'โปรดระบุ.'
             }
         }
     },

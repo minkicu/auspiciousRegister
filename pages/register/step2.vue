@@ -60,18 +60,22 @@
                         </v-dialog>
 
                         
-
                         <v-text-field
                             v-model="form.birthtime"
                             dense
                             label="เวลา เกิด"
                             hint="HH:MM"
                         ></v-text-field>
-                        <v-text-field
-                            v-model="form.birthlocation"
-                            dense
-                            label="จังหวัด เกิด"
-                        ></v-text-field>
+
+                        <v-autocomplete
+                            ref="province"
+                            v-model="form.province"
+                            :rules="[() => !!form.province || 'โปรดระบุ']"
+                            :items="provinces"
+                            label="จังหวัด"
+                            placeholder="กรุณาเลือก..."
+                            required
+                        ></v-autocomplete>
                         <v-btn
                             rounded
                             color="primary"
@@ -82,7 +86,7 @@
                             ลงทะเบียน
                             </v-btn>
 
-                        <div class="w-100 text-center my-btn text-primary" @click="back">Back</div>
+                        <div class="w-100 text-center my-btn text-primary" @click="back">ย้อนกลับ</div>
                     </v-form>
                 </v-col>
             </v-row>
@@ -97,9 +101,91 @@ export default {
             form: {
                 birthdate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
                 birthtime: '',
-                birthlocation: ''
+                birthlocation: '',
+                province: ''
             },
             modal: false,
+            modal2: false,
+            time: null,
+            provinces: [
+                'กรุงเทพมหานคร',
+                'กระบี่',
+                'กาญจนบุรี',
+                'กาฬสินธุ์',
+                'กำแพงเพชร',
+                'ขอนแก่น',
+                'จันทบุรี',
+                'ฉะเชิงเทรา',
+                'ชลบุรี',
+                'ชัยนาท',
+                'ชัยภูมิ',
+                'ชุมพร',
+                'เชียงใหม่',
+                'เชียงราย',
+                'ตรัง',
+                'ตราด',
+                'ตาก',
+                'นครนายก',
+                'นครปฐม',
+                'นครพนม',
+                'นครราชสีมา',
+                'นครศรีธรรมราช',
+                'นครสวรรค์',
+                'นนทบุรี',
+                'นราธิวาส',
+                'น่าน',
+                'บึงกาฬ',
+                'บุรีรัมย์',
+                'ปทุมธานี',
+                'ประจวบคีรีขันธ์',
+                'ปราจีนบุรี',
+                'ปัตตานี',
+                'พระนครศรีอยุธยา',
+                'พะเยา',
+                'พังงา',
+                'พัทลุง',
+                'พิจิตร',
+                'พิษณุโลก',
+                'เพชรบุรี',
+                'เพชรบูรณ์',
+                'แพร่',
+                'ภูเก็ต',
+                'มหาสารคาม',
+                'มุกดาหาร',
+                'แม่ฮ่องสอน',
+                'ยโสธร',
+                'ยะลา',
+                'ร้อยเอ็ด',
+                'ระนอง',
+                'ระยอง',
+                'ราชบุรี',
+                'ลพบุรี',
+                'ลำปาง',
+                'ลำพูน',
+                'เลย',
+                'ศรีสะเกษ',
+                'สกลนคร',
+                'สงขลา',
+                'สตูล',
+                'สมุทรปราการ',
+                'สมุทรสงคราม',
+                'สมุทรสาคร',
+                'สระแก้ว',
+                'สระบุรี',
+                'สิงห์บุรี',
+                'สุโขทัย',
+                'สุพรรณบุรี',
+                'สุราษฎร์ธานี',
+                'สุรินทร์',
+                'หนองคาย',
+                'หนองบัวลำภู',
+                'อ่างทอง',
+                'อำนาจเจริญ',
+                'อุดรธานี',
+                'อุตรดิตถ์',
+                'อุทัยธานี',
+                'อุบลราชธานี',
+                ]
         }
     },
     methods: {
