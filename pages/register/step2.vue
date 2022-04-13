@@ -52,16 +52,20 @@
                             <v-btn
                                 text
                                 color="primary"
-                                @click="$refs.dialog.save(date)"
+                                @click="$refs.dialog.save(form.birthdate)"
                             >
                                 OK
                             </v-btn>
                             </v-date-picker>
                         </v-dialog>
+
+                        
+
                         <v-text-field
                             v-model="form.birthtime"
                             dense
                             label="เวลา เกิด"
+                            hint="HH:MM"
                         ></v-text-field>
                         <v-text-field
                             v-model="form.birthlocation"
