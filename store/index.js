@@ -4,13 +4,18 @@ export const state = () => ({
         title: '',
         message: ','
     },
+    line:{
+        pictureUrl: null,
+        displayName: null,
+        userId: null
+    },
     register: {
         firstname: '',
         lastname: '',
         gender: 1,
         birthdate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         birthtime: '',
-        birthlocation: ''
+        birthplace: ''
 
     }
 })
@@ -21,6 +26,9 @@ export const getters = {
     },
     getDialog(state){
         return state.dialog
+    },
+    getLine(state){
+        return state.line
     }
 
 }
@@ -37,6 +45,12 @@ export const mutations = {
             ...state.dialog,
             ...data
         }
+    },
+    SET_LINE(state, data){
+        state.line = {
+            ...state.line,
+            ...data
+        }
     }
 }
 
@@ -47,4 +61,7 @@ export const actions = {
     setDialog({ commit }, data){
         commit('SET_DIALOG', data)
     },
+    setLine({ commit }, data){
+        commit('SET_LINE', data)
+    }
 }

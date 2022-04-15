@@ -64,13 +64,13 @@
                             v-model="form.birthtime"
                             dense
                             label="เวลา เกิด"
-                            hint="HH:MM"
+                            :rules="timeRules"
                         ></v-text-field>
 
                         <v-autocomplete
                             ref="province"
-                            v-model="form.province"
-                            :rules="[() => !!form.province || 'โปรดระบุ']"
+                            v-model="form.birthplace"
+                            :rules="[() => !!form.birthplace || 'โปรดระบุ']"
                             :items="provinces"
                             label="จังหวัด"
                             placeholder="กรุณาเลือก..."
@@ -95,18 +95,17 @@
 </template>
 
 <script>
+const REGEX_TIME =  /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/ // /^([0-9]{2})[:]([0-9]{2})*$/
 export default {
     data(){
         return {
             form: {
-                birthdate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-                birthtime: '',
-                birthlocation: '',
-                province: ''
+                birthdate: this.$store.getters.getRegister.birthdate, //(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+                birthtime: this.$store.getters.getRegister.birthtime,
+                birthplace: this.$store.getters.getRegister.birthplace
             },
             modal: false,
-            modal2: false,
-            time: null,
+            timeRules: [value => this.timeValidator(value)],
             provinces: [
                 'กรุงเทพมหานคร',
                 'กระบี่',
@@ -189,12 +188,69 @@ export default {
         }
     },
     methods: {
+        timeValidator(value){
+            this.timeValidated = false
+            if(REGEX_TIME.test(value)){
+                this.timeValidated = true
+                return true
+            }
+            return "HH:MM 24-hour format, optional leading 0"
+        },
         back() {
             this.$router.push('/register')
         },
         register() {
-            console.log("register")
-        }
+
+            if (this.validate()) {
+                this.$store.dispatch('setRegister',this.form)
+                this.$axios.patch(`https://tellme-340313-default-rtdb.asia-southeast1.firebasedatabase.app/member/${this.$store.getters.getLine.userId}/profile.json`,this.$store.getters.getRegister).then((res) => {
+                    this.$router.push('/register/done')
+                })
+            }
+
+        },
+        validate(){
+            let validated = true
+            const errors = []
+            let errorMsg = ''
+            const validatorField = [
+                'birthdate',
+                'birthtime',
+                'birthplace',
+
+            ]
+            validatorField.forEach((field) => {
+                if(this.form[field] == ''){
+                    validated = false
+                    //errors.push(`${field} ไม่สามารถเว้นว่างได้`)
+                    if (field == 'birthdate') {
+                        errors.push(`วัน-เดือน-ปี เกิด ไม่สามารถเว้นว่างได้`)
+                    } 
+                    if (field == 'birthtime') {
+                        errors.push(`เวลาเกิด ไม่สามารถเว้นว่างได้`)
+                    }
+                    if (field == 'birthplace') {
+                        errors.push(`สถานที่เกิด ไม่สามารถเว้นว่างได้`)
+                    }
+                }
+                
+            })
+
+            if(!this.timeValidated){
+                validated = false
+                errors.push(`โปรดระบุ เวลาเกิดให้ถูกต้อง`)
+            }
+            
+            if(!validated){
+                this.$store.dispatch('setDialog', {
+                    isShow: true,
+                    title: 'ข้อผิดพลาด',
+                    message: errorMsg = errors.map((error) => error+'<br/>').join('')
+                })
+            }
+            console.log(errorMsg)
+            return validated
+        },
     }
 }
 </script>

@@ -15,11 +15,13 @@
                     Step 1 of 2
                     </div>
                 </v-col>
-                <v-col cols="12" class="text-center pt-0 pb-0">
-                        <img src="~/assets/text-title.png" alt="" width="155">
+                <v-col cols="12" class="text-center pt-0 pb-0 profile-img">
+                        <img v-if="getLine.pictureUrl == ''" src="~/assets/text-title.png" alt="" width="155">
+                        <img v-else :src="getLine.pictureUrl" alt="" width="155">
+                        
                 </v-col>
                 <v-col cols="12" class="text-center pt-2 pb-0">
-                    Display name
+                    {{ getLine.displayName }}
                 </v-col>
                 <v-col cols="12">
                     <v-form>
@@ -38,11 +40,11 @@
                         <div class="gender-group d-flex mt-3">
                             <p>เพศ</p>
                             <div class="circle" :class="form.gender == 1 ? 'active' : ''" @click="chooseGender(1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24px" version="1.1" viewBox="0 0 24 24" width="24px"><title/><g fill="none" fill-rule="evenodd" id="social/gender/female" stroke="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"><path d="M17.5,8.5 C17.5,11.813 14.813,14.5 11.5,14.5 C8.187,14.5 5.5,11.813 5.5,8.5 C5.5,5.187 8.187,2.5 11.5,2.5 C14.813,2.5 17.5,5.187 17.5,8.5 Z M11.5,14.5 L11.5,21.5 M8.5,18.5 L14.5,18.5" id="line" stroke="#FFFFFF"/></g></svg>
+                                <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" class="icon-70"><rect fill="none" height="256" width="256"/><circle cx="128" cy="96" fill="none" r="72" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><line fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" x1="128" x2="128" y1="168" y2="240"/><line fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" x1="88" x2="168" y1="208" y2="208"/></svg>
                             </div>
                             <p>หญิง</p>
                             <div class="circle" :class="form.gender == 2 ? 'active' : ''" @click="chooseGender(2)">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect fill="none" height="256" width="256"/><circle cx="104" cy="152" fill="none" r="72" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><line fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" x1="154.9" x2="216" y1="101.1" y2="40"/><polyline fill="none" points="168 40 216 40 216 88" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/></svg>
+                                <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" class="icon-70"><rect fill="none" height="256" width="256"/><circle cx="104" cy="152" fill="none" r="72" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><line fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" x1="154.9" x2="216" y1="101.1" y2="40"/><polyline fill="none" points="168 40 216 40 216 88" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/></svg>
                             </div>
                             <p>ชาย</p>
                         </div>
@@ -76,6 +78,27 @@
 </template>
 <script>
 export default {
+    mounted() {
+        liff.init({
+            liffId: '1657047674-6R75lQ5d'
+        }).then(() => {
+            if(liff.isLoggedIn()){
+                console.log("login")
+                liff.getProfile().then(profile => {
+                    this.$store.dispatch('setLine',profile);
+                    this.isDone();
+                })
+            }else{
+                liff.login();
+            }
+            
+        })
+    },
+    computed:{
+        getLine(){
+            return this.$store.getters.getLine;
+        }
+    },
     data() {
         return {
             form: {
@@ -89,6 +112,13 @@ export default {
         }
     },
     methods: {
+        isDone(){
+            this.$axios.get(`https://tellme-340313-default-rtdb.asia-southeast1.firebasedatabase.app/member/${this.$store.getters.getLine.userId}/profile.json`).then((res) => {
+                if(res.data !=null) {
+                    this.$router.push('register/done');
+                }
+            });
+        },
         chooseGender(gender){
             this.form.gender = gender
         },
@@ -132,6 +162,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .icon-70{
+        width: 70%;
+        height: 70%;
+    }
+    .profile-img {
+        img{
+            border-radius: 50%;
+        }
+    }
     .v-form{
         padding: 0 20px;
     }
