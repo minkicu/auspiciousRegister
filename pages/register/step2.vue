@@ -248,7 +248,7 @@ export default {
                     message: errorMsg = errors.map((error) => error+'<br/>').join('')
                 })
             }
-            console.log(errorMsg)
+            
             return validated
         },
     }

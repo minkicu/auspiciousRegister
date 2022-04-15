@@ -83,7 +83,6 @@ export default {
             liffId: '1657047674-6R75lQ5d'
         }).then(() => {
             if(liff.isLoggedIn()){
-                console.log("login")
                 liff.getProfile().then(profile => {
                     this.$store.dispatch('setLine',profile);
                     this.isDone();
@@ -148,7 +147,7 @@ export default {
                     message: errorMsg = errors.map((error) => error+'<br/>').join('')
                 })
             }
-            console.log(errorMsg)
+            
             return validated
         },
         next(){
