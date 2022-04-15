@@ -93,6 +93,11 @@ export default {
             
         })
     },
+    head() {
+    return {
+        title: "Auspicious"
+        };
+    },
     computed:{
         getLine(){
             return this.$store.getters.getLine;
