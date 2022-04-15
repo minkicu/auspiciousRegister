@@ -114,7 +114,7 @@ export default {
         isDone(){
             this.$axios.get(`https://tellme-340313-default-rtdb.asia-southeast1.firebasedatabase.app/member/${this.$store.getters.getLine.userId}/profile.json`).then((res) => {
                 if(res.data !=null) {
-                    this.$router.push('register/done');
+                    this.$router.push('./done');
                 }
             });
         },
